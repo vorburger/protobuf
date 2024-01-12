@@ -5,8 +5,8 @@
 // license that can be found in the LICENSE file or at
 // https://developers.google.com/open-source/licenses/bsd
 
-#ifndef UPB_MINI_TABLE_INTERNAL_TYPES_H_
-#define UPB_MINI_TABLE_INTERNAL_TYPES_H_
+#ifndef UPB_MESSAGE_INTERNAL_TYPES_H_
+#define UPB_MESSAGE_INTERNAL_TYPES_H_
 
 // This definition exists here (instead of in upb/message/) as an optimization
 // so that minitable code can cleanly know the size of a upb_Message - which is
@@ -19,4 +19,4 @@ struct upb_Message {
   };
 };
 
-#endif /* UPB_MINI_TABLE_INTERNAL_TYPES_H_ */
+#endif /* UPB_MESSAGE_INTERNAL_TYPES_H_ */
