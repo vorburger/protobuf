@@ -93,9 +93,9 @@ class SingularMessage final : public AccessorGenerator {
   void InThunkCc(Context& ctx, const FieldDescriptor& field) const override;
 };
 
-class RepeatedScalar final : public AccessorGenerator {
+class RepeatedField final : public AccessorGenerator {
  public:
-  ~RepeatedScalar() override = default;
+  ~RepeatedField() override = default;
   void InMsgImpl(Context& ctx, const FieldDescriptor& field) const override;
   void InExternC(Context& ctx, const FieldDescriptor& field) const override;
   void InThunkCc(Context& ctx, const FieldDescriptor& field) const override;
