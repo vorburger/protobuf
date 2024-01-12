@@ -15,8 +15,8 @@ namespace protobuf {
 namespace compiler {
 namespace rust {
 
-void UnsupportedField::InMsgImpl(Context& ctx,
-                                 const FieldDescriptor& field) const {
+void UnsupportedField::InMsgImpl(Context& ctx, const FieldDescriptor& field,
+                                 bool emit_mutable_accessors) const {
   ctx.Emit({{"reason", reason_}}, R"rs(
     // Unsupported! :( Reason: $reason$
     )rs");

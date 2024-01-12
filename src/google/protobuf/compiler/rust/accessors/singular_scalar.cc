@@ -20,8 +20,8 @@ namespace protobuf {
 namespace compiler {
 namespace rust {
 
-void SingularScalar::InMsgImpl(Context& ctx,
-                               const FieldDescriptor& field) const {
+void SingularScalar::InMsgImpl(Context& ctx, const FieldDescriptor& field,
+                               bool emit_mutable_accessors) const {
   ctx.Emit(
       {
           {"field", field.name()},
@@ -32,7 +32,7 @@ void SingularScalar::InMsgImpl(Context& ctx,
            [&] {
              ctx.Emit({}, R"rs(
                   pub fn r#$field$(&self) -> $Scalar$ {
-                    unsafe { $getter_thunk$(self.inner.msg) }
+                    unsafe { $getter_thunk$(self.raw_msg()) }
                   }
                 )rs");
            }},
@@ -42,10 +42,10 @@ void SingularScalar::InMsgImpl(Context& ctx,
              if (!field.has_presence()) return;
              ctx.Emit({}, R"rs(
                   pub fn r#$field$_opt(&self) -> $pb$::Optional<$Scalar$> {
-                    if !unsafe { $hazzer_thunk$(self.inner.msg) } {
+                    if !unsafe { $hazzer_thunk$(self.raw_msg()) } {
                       return $pb$::Optional::Unset($default_value$);
                     }
-                    let value = unsafe { $getter_thunk$(self.inner.msg) };
+                    let value = unsafe { $getter_thunk$(self.raw_msg()) };
                     $pb$::Optional::Set(value)
                   }
                   )rs");
@@ -53,8 +53,11 @@ void SingularScalar::InMsgImpl(Context& ctx,
           {"getter_thunk", ThunkName(ctx, field, "get")},
           {"setter_thunk", ThunkName(ctx, field, "set")},
           {"clearer_thunk", ThunkName(ctx, field, "clear")},
-          {"field_mutator_getter",
+          {"getter_mut",
            [&] {
+             if (!emit_mutable_accessors) {
+               return;
+             }
              if (field.has_presence()) {
                ctx.Emit({}, R"rs(
                   pub fn r#$field$_mut(&mut self) -> $pb$::FieldEntry<'_, $Scalar$> {
@@ -68,10 +71,10 @@ void SingularScalar::InMsgImpl(Context& ctx,
                       );
 
                       unsafe {
-                        let has = $hazzer_thunk$(self.inner.msg);
+                        let has = $hazzer_thunk$(self.raw_msg());
                         $pbi$::new_vtable_field_entry::<$Scalar$>(
                           $pbi$::Private,
-                          $pbr$::MutatorMessageRef::new($pbi$::Private, &mut self.inner),
+                          self.as_mutator_message_ref(),
                           &VTABLE,
                           has,
                         )
@@ -98,9 +101,7 @@ void SingularScalar::InMsgImpl(Context& ctx,
                           $pbi$::Private,
                           $pbi$::RawVTableMutator::new(
                             $pbi$::Private,
-                            $pbr$::MutatorMessageRef::new(
-                              $pbi$::Private, &mut self.inner
-                            ),
+                            self.as_mutator_message_ref(),
                             &VTABLE,
                           ),
                         )
@@ -113,7 +114,7 @@ void SingularScalar::InMsgImpl(Context& ctx,
       R"rs(
           $getter$
           $getter_opt$
-          $field_mutator_getter$
+          $getter_mut$
         )rs");
 }
 

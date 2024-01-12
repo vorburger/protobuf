@@ -17,8 +17,8 @@ namespace protobuf {
 namespace compiler {
 namespace rust {
 
-void RepeatedScalar::InMsgImpl(Context& ctx,
-                               const FieldDescriptor& field) const {
+void RepeatedScalar::InMsgImpl(Context& ctx, const FieldDescriptor& field,
+                               bool emit_mutable_accessors) const {
   ctx.Emit({{"field", field.name()},
             {"Scalar", RsTypePath(ctx, field)},
             {"getter_thunk", ThunkName(ctx, field, "get")},
@@ -30,7 +30,7 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
                     pub fn r#$field$(&self) -> $pb$::RepeatedView<'_, $Scalar$> {
                       unsafe {
                         $getter_thunk$(
-                          self.inner.msg,
+                          self.raw_msg(),
                           /* optional size pointer */ std::ptr::null(),
                         ) }
                         .map_or_else(
@@ -47,7 +47,7 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
                       unsafe {
                         $pb$::RepeatedView::from_raw(
                           $pbi$::Private,
-                          unsafe { $getter_thunk$(self.inner.msg) },
+                          unsafe { $getter_thunk$(self.raw_msg()) },
                         )
                       }
                     }
@@ -55,8 +55,11 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
                }
              }},
             {"clearer_thunk", ThunkName(ctx, field, "clear")},
-            {"field_mutator_getter",
+            {"getter_mut",
              [&] {
+               if (!emit_mutable_accessors) {
+                 return;
+               }
                if (ctx.is_upb()) {
                  ctx.Emit({}, R"rs(
                     pub fn r#$field$_mut(&mut self) -> $pb$::RepeatedMut<'_, $Scalar$> {
@@ -66,11 +69,11 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
                           $pbr$::InnerRepeatedMut::new(
                             $pbi$::Private,
                             $getter_mut_thunk$(
-                              self.inner.msg,
+                              self.raw_msg(),
                               /* optional size pointer */ std::ptr::null(),
-                              self.inner.arena.raw(),
+                              self.arena().raw(),
                             ),
-                            &self.inner.arena,
+                            self.arena(),
                           ),
                         )
                       }
@@ -84,7 +87,7 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
                             $pbi$::Private,
                             $pbr$::InnerRepeatedMut::new(
                               $pbi$::Private,
-                              $getter_mut_thunk$(self.inner.msg),
+                              $getter_mut_thunk$(self.raw_msg()),
                             ),
                           )
                         }
@@ -94,7 +97,7 @@ void RepeatedScalar::InMsgImpl(Context& ctx,
              }}},
            R"rs(
           $getter$
-          $field_mutator_getter$
+          $getter_mut$
         )rs");
 }
 

@@ -16,7 +16,8 @@ namespace protobuf {
 namespace compiler {
 namespace rust {
 
-void GenerateAccessorMsgImpl(Context& ctx, const FieldDescriptor& field);
+void GenerateAccessorMsgImpl(Context& ctx, const FieldDescriptor& field,
+                             bool emit_mutable_accessors);
 void GenerateAccessorExternC(Context& ctx, const FieldDescriptor& field);
 void GenerateAccessorThunkCc(Context& ctx, const FieldDescriptor& field);
 

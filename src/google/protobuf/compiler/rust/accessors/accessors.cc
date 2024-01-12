@@ -101,8 +101,10 @@ std::unique_ptr<AccessorGenerator> AccessorGeneratorFor(
 
 }  // namespace
 
-void GenerateAccessorMsgImpl(Context& ctx, const FieldDescriptor& field) {
-  AccessorGeneratorFor(ctx, field)->GenerateMsgImpl(ctx, field);
+void GenerateAccessorMsgImpl(Context& ctx, const FieldDescriptor& field,
+                             bool emit_mutable_accessors) {
+  AccessorGeneratorFor(ctx, field)
+      ->GenerateMsgImpl(ctx, field, emit_mutable_accessors);
 }
 
 void GenerateAccessorExternC(Context& ctx, const FieldDescriptor& field) {
