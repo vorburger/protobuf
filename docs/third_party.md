@@ -199,10 +199,17 @@ Inactive:
 *   [NetBeans IDE plugin](https://code.google.com/p/protobuf-netbeans-plugin/)
 *   [Editor for serialized protobufs](https://code.google.com/p/protobufeditor/)
 
-## Documentation
+## Documentation Plugins
 
 *   [Documentation generator plugin (Markdown/HTML/DocBook/...)](https://github.com/pseudomuto/protoc-gen-doc)
 *   [DocBook generator for .proto files](https://code.google.com/p/protoc-gen-docbook/)
+
+## Other Plugins
+
+These are [`protoc` plugins](https://protobuf.dev/reference/other/) which generate something else than bindings for specific programming languages:
+
+*   [protoc-gen-bq-schema - A protoc plugin to generate BigQuery schema files](https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema)
+*   [chrusty/protoc-gen-jsonschema](https://github.com/chrusty/protoc-gen-jsonschema) generates [JSON Schema](https://json-schema.org) from `.proto`
 
 ## Other Utilities
 
@@ -239,8 +246,7 @@ There are miscellaneous other things you may find useful as a Protocol Buffers d
     *   [intellij-protolint: A protobuf linter for JetBrains IDEs](https://github.com/yoheimuta/intellij-protolint)
     *   [vim-protolint: A protobuf linter for Vim](https://github.com/yoheimuta/vim-protolint)
 *   [super-linter: Protocol Buffer lint as GitHub Action](https://github.com/github/super-linter)
-*   [protoc-gen-fieldmask - A plugin to generate static type fieldmask paths](https://github.com/idodod/protoc-gen-fieldmask)
-*   [protoc-gen-bq-schema - A protoc plugin to generate BigQuery schema files](https://github.com/GoogleCloudPlatform/protoc-gen-bq-schema)
+*   [protoc-gen-fieldmask - A plugin to generate static type fieldmask paths](https://github.com/idodod/protoc-gen-fieldmask) types for Go
 *   [protobuf-decoder-explainer - Web page which decodes and explains pasted
     binary Protocol
     Buffers](https://github.com/jamesdbrock/protobuf-decoder-explainer)
